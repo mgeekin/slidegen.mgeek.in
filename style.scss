@@ -481,7 +481,7 @@ samp {
 pre code,code-block{
   padding:1em;
   box-shadow:2px 2px 5px hsla(var(--hueAscent),50%,40%,.8);
-  border-radius: 1em;
+  border-radius: .5em;
   font-size:.7em;
   font-family: monospace;
   display: block;
@@ -511,9 +511,11 @@ box-shadow:2px 2px 5px hsla(var(--hueAscent),50%,40%,.2);
 }
 
 .samp {
-    font-size: .7em;
+    font-size: 12px;
+    font-family: helvetica;
     overflow-x: auto;
-    white-space: pre-wrap;
+    //color:grey;
+    
 }
 
 

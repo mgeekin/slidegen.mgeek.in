@@ -543,7 +543,7 @@ function openFile() {
     parseSlide(fileUrl, mathjaxHljsCopyIcon);
   }
   if (fileType == "application/x-ipynb+json" || ext == "ipynb") {
-    parseNotebook(fileUrl);
+    parseNotebook(fileUrl,mathjaxHljsCopyIcon);
   }
   // updateFiledropEventListeners()
 }
@@ -902,7 +902,7 @@ function generateView() {
       parseSlide(router.view, mathjaxHljsCopyIcon);
     },
     ipynb: () => {
-      parseNotebook(router.view);
+      parseNotebook(router.view,mathjaxHljsCopyIcon);
     },
     pdf: () => {
       showPDF(router.view);
@@ -1620,7 +1620,7 @@ function parseNotebook(link, callback) {
 
   convertLocalLinks();
   updateFiledropEventListeners();
-
+  mathjaxHljsCopyIcon();
 }
 
 function closeparent(e) {
