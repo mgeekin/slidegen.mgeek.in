@@ -980,6 +980,32 @@ function generateView() {
 
 }
 
+
+
+
+
+function downloadURL(
+  fileListUrl = window.location.origin + window.location.pathname + "list.txt",
+  target = "#main"
+) {
+  log(fileListUrl)
+  var f=fileListUrl.split("/")
+  var FileName =f[f.length-1];
+  log(f[-1])
+  append(main,gen(a,"downloadpdf","Download " + FileName,"folderSlide pdf",{href:fileListUrl,target:"_blank",download:FileName}))
+  grab(downloadpdf).click()
+  append(downloadpdf,"",'o');
+  // log("downloaded")
+}
+
+
+
+
+
+
+
+
+
 async function filedetect() {
   var router = new Router();
   var presentfile = "";
@@ -1122,7 +1148,9 @@ function parselist(
           !link.includes(".md") &&
           !link.includes(".ipynb") &&
           !link.includes(".pdf") &&
-          !link.includes(".csv")
+          !link.includes(".csv") &&
+          !link.includes(".csv") &&
+          !link.includes(".xlsx")
         ) {
           var linkname = link
             .replaceAll("./", "")
@@ -1204,6 +1232,33 @@ function parselist(
           }
         }
 
+
+
+
+
+                //for xlsx files
+                if (ext == "xlsx") {
+                  // log("xlsx")
+                  var linkname = link
+                    .replaceAll("./", "")
+                    .replaceAll("/", " / ")
+                    .replaceAll("-", " ")
+                    .replaceAll(".xlsx", "")
+                    .replaceAll("_", " ");
+                  if (link.length > 0 && link != "./") {
+                    append(
+                      directoryGrid,
+                      gen(a, `${url}`, linkname, "pdfLinks,xlsxLinks", {
+                        onclick: `downloadURL(\`${url}\`)`,
+                        tabindex: 10,
+                      })
+                    );
+                  }
+                }
+
+
+
+                
 
           //for csv files
           if (ext == "csv") {

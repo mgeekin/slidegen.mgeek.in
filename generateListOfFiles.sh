@@ -8,3 +8,4 @@ find ./*.pdf -maxdepth 1 -name "*" >>list.txt
 find ./*.ipynb -maxdepth 1 -name "*" >>list.txt
 find ./*.docx -maxdepth 1 -name "*" >>list.txt
 find ./*.pptx -maxdepth 1 -name "*" >>list.txt
+find ./*.xlsx -maxdepth 1 -name "*" >>list.txt

@@ -398,7 +398,7 @@ a {
 
 
 
-.pdfLinks {
+.csvLinks, .xlsxLinks, .pdfLinks {
 
     cursor: pointer;
     position: relative;
@@ -441,6 +441,10 @@ a {
         font-weight: 900;
     }
 }
+
+.pdfLinks::after{content:"PDF";}
+.xlsxLinks::after{content:"XLSX";}
+.csvLinks::after{content:"CSV";}
 
 .button {
     display: inline-block;
