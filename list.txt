@@ -1,5 +1,5 @@
 ./
-./Demo
-./.github
 ./.git
+./.github
+./Demo
 ./README.md
