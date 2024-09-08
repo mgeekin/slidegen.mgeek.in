@@ -1249,7 +1249,7 @@ function parselist(
                     .replaceAll("./", "")
                     .replaceAll("/", " / ")
                     .replaceAll("-", " ")
-                    .replaceAll(ext, "")
+                    .replaceAll(`.${ext}`, "")
                     .replaceAll("_", " ");
                   if (link.length > 0 && link != "./") {
                     append(
