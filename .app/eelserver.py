@@ -8,7 +8,6 @@ def start_app():
     eel_thread = threading.Thread(target=eel_start) # Eel app start.
     eel_thread.setDaemon(True)
     eel_thread.start() # Run eel in a seperate thread.
-
     webview_start() # Start pywebview web browser.
 
 def eel_start():
@@ -25,7 +24,11 @@ def webview_start():
     webview.create_window("App Name", f"http://localhost:{PORT}")
     webview.start()
 
-start_app() # Run app.
+try:
+    start_app() # Run app.
+except:
+    eel.init("web")
+    eel.start("index.html")
 
 
 # import eel
