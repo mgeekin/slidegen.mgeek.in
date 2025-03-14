@@ -1377,7 +1377,8 @@ function parseCsv(link, callback) {
 
     var listrootscss=`
     .listroot{
-      display:block;
+      display:flex;
+      flex-direction:column;
       min-height:40vh;
       padding-block: 2em;
       padding-inline:clamp(5em,5vw,1em);
@@ -1393,10 +1394,19 @@ function parseCsv(link, callback) {
       }
 
       .search{
-        padding:.5em;
-        border-radius:.2em;
+        display: block;
+        margin: 0 auto;
+        background-color: hsl(var(--hue,5%,5%));
+        color:white;
+        width: 90%;
+        border-radius: .5em;
+        border: 1px solid white;
+        padding: .5em 1em;
         outline:none;
-        border:none;
+      }
+
+      tr:has(td:empty){
+        display: none;
       }
     }
     
@@ -1426,13 +1436,23 @@ function parseCsv(link, callback) {
 
     append(`#listroot`,gen(table,"tablemain","","listbody"))
 
-    append(`#tablemain`,gen("thead","tablehead",""))
-    append(`#tablemain`,gen("tbody","tablebody",""))
+    append(tablemain,gen("thead","tablehead",""))
+    append(tablemain,gen("tbody","tablebody",""))
     console.log(csv)
-    csv.split("\n").forEach(row=>{
-      console.log(row)
-      append(`#tablebody`,gen("tr","",row))
-    })
+
+    var csvRows=csv.split("\n")
+    for (var i = 0; i<csvRows.length; i++){
+      var rowData=csvRows[i]
+      // console.log(rowData)
+      if (i==0) 
+        {append(`#tablehead`,gen("tr",`tablerow${i}`))} 
+      else
+         {append(`#tablebody`,gen("tr",`tablerow${i}`))}
+      var colData = rowData.split(",")
+      for (var j = 0; j<colData.length; j++){
+        append(`#tablerow${i}`,gen(td,`tablecol${i}${j}`,colData[j]))
+      }
+    }
 
 
 
