@@ -64,368 +64,225 @@ function GeneratorJs() {
 
     };
 
-    // check if content is html
-    self.isHTML = (content) => {
-        const tempElement = document.createElement('div');
-        tempElement.innerHTML = content;
-        return tempElement.children.length > 0;
-    }
-
-
-    // // append Orignal Old
-    // self.append = (parentid, childhtml, position = 'after') => {
-    //     position = position.toLowerCase()
-    //     try {
-    //         if (parentid instanceof Object == true) { 
-    //             var parentElement = parentid 
-    //         }
-    //         else {
-    //             var parentElement = document.querySelectorAll(parentid)[0];
-    //         }
-    //         var parentTag = parentElement.tagName.toLowerCase()
-
-    //         // parentTag is table,thead,tbody,or tr
-
-    //         if (parentTag == 'table' || parentTag == 'thead' || parentTag == 'tbody' || parentTag == 'tr' || parentTag == 'td') {
-    //             //table element use table placeholder
-    //             var T = document.createElement('table')
-    //             T.id = 'T'
-    //             T.innerHTML = ""
-    //         }
-    //         else {
-    //             // non table element use div placeholder
-
-    //             // var parentElement = self.get(parentid)[0]
-    //             var T = document.createElement('div')
-    //             T.id = 'T'
-    //             T.innerHTML = ""
-    //         }
-    //         // array
-    //         if (Array.isArray(childhtml) == true) {
-         
-    //             childhtml.forEach((child,index) => {
-    //                 if (typeof child == 'string') {
-    //                     T.innerHTML += child
-    //                 }
-    //                 else if (typeof child != 'string') {
-    //                     if (child.outerHTML != undefined) {
-    //                         T.innerHTML += child.outerHTML
-    //                     }
-    //                     if (child.outerHTML == undefined) {
-    //                         T.innerHTML += objtohtml(child)
-    //                     }
-    //                 }
-    //                 //may be removed
-    //                 else if (self.isHTML(child)){
-    //                     T.innerHTML += child.outerHTML
-    //                 }
-    //                 // console.log(T.innerHTML)
-    //             });
-
-
-    //         }
-    //         // non array
-    //         else if (Array.isArray(childhtml) == false) {
-
-    //             if (childhtml != undefined) {
-    //                 if (typeof childhtml == 'string') {
-    //                     T.innerHTML += childhtml
-    //                 }
-    //                 if (typeof childhtml != 'string') {
-    //                     if (childhtml.outerHTML != undefined) {
-    //                         T.innerHTML += childhtml.outerHTML
-    //                     }
-    //                     if (childhtml.outerHTML == undefined) {
-    //                         T.innerHTML += childhtml
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-
-    //         if (position == 'before' || position == 'b') {
-    //             parentElement.innerHTML = T.innerHTML + parentElement.innerHTML
-    //         } else if (position == 'over' || position == 'o') {
-    //             if (T.innerHTML != null) parentElement.innerHTML = T.innerHTML
-    //             if (T.innerHTML == null) parentElement.innerHTML = ''
-    //         } else if (position == 'replace' || position == 'r') {
-    //             parentElement.outerHTML = T.innerHTML
-    //         } else if (position == 'after' || position == 'a') {
-    //             parentElement.innerHTML = parentElement.innerHTML + T.innerHTML
-    //         } else if (position == 'parent' || position == 'p') {
-    //             var oldElement = parentElement.outerHTML
-    //             parentElement.innerHTML = ""
-    //             T.childNodes[0].innerHTML += oldElement
-    //             parentElement.outerHTML = T.innerHTML
-    //         } else {
-    //             parentElement.innerHTML = parentElement.innerHTML + T.innerHTML
-    //         }
-    //     }
-    //     catch (err) {
-    //         console.log(`append(${parentid}, ${childhtml}, ${position})`)
-    //         console.error(err)
-    //     }
-
-    // }
-
-    //     ;
 
 
 
+    // append
     self.append = (parentid, childhtml, position = 'after') => {
-        // Convert position to lowercase for case-insensitive comparison
-        position = position.toLowerCase();
-    
+        position = position.toLowerCase()
         try {
-            // Determine the parent element
-            let parentElement;
-            if (parentid instanceof Object) { 
-                // If parentid is already a DOM element, use it directly
-                parentElement = parentid;
-            } else {
-                // Otherwise, query the DOM to find the first matching element
-                parentElement = document.querySelectorAll(parentid)[0];
+            if (parentid instanceof Object == true) { var parentElement = parentid }
+            else {
+                var parentElement = document.querySelectorAll(parentid)[0];
             }
-    
-            // Get the tag name of the parent element in lowercase
-            var parentTag = parentElement.tagName.toLowerCase();
-    
-            // Check if the parent element is part of a table (table, thead, tbody, tr, or td)
-            if (parentTag == 'table' || parentTag == 'thead' || parentTag == 'tbody' || parentTag == 'tr' || parentTag == 'td') {
-                // For table elements, create a temporary <table> placeholder
-                var T = document.createElement('table');
-                T.id = 'T';
-                T.innerHTML = ""; // Initialize with empty content
-            } else {
-                // For non-table elements, create a temporary <div> placeholder
-                var T = document.createElement('div');
-                T.id = 'T';
-                T.innerHTML = ""; // Initialize with empty content
-            }
-    
-            // Handle childhtml if it is an array
-            if (Array.isArray(childhtml)) {
-                childhtml.forEach((child, index) => {
-                    if (typeof child == 'string') {
-                        // If the child is a string, append it directly to the placeholder's innerHTML
-                        T.innerHTML += child;
-                    } else if (typeof child != 'string') {
-                        if (child.outerHTML != undefined) {
-                            // If the child is a DOM element with outerHTML, append its outerHTML
-                            T.innerHTML += child.outerHTML;
+            // var parentElement = self.get(parentid)[0]
+            var T = document.createElement('div')
+            T.id = 'T'
+            T.innerHTML = ""
+            if (Array.isArray(childhtml) == true) {
+                for (let i = 0; i < childhtml.length; i++) {
+                    if (typeof childhtml[i] == 'string') {
+                        T.innerHTML += childhtml[i]
+                    }
+
+                    if (typeof childhtml[i] != 'string') {
+                        if (childhtml[i].outerHTML != undefined) {
+                            T.innerHTML += childhtml[i].outerHTML
                         }
-                        if (child.outerHTML == undefined) {
-                            // If the child is an object without outerHTML, convert it to HTML using objtohtml
-                            T.innerHTML += objtohtml(child);
+                        if (childhtml[i].outerHTML == undefined) {
+                            T.innerHTML += objtohtml(childhtml[i])
                         }
                     }
-                    // This block may be removed (legacy or unused logic)
-                    else if (self.isHTML(child)) {
-                        T.innerHTML += child.outerHTML;
-                    }
-                });
+
+                }
+
             }
-            // Handle childhtml if it is not an array
-            else if (Array.isArray(childhtml) == false) {
+            if (Array.isArray(childhtml) == false) {
+
                 if (childhtml != undefined) {
                     if (typeof childhtml == 'string') {
-                        // If childhtml is a string, append it directly to the placeholder's innerHTML
-                        T.innerHTML += childhtml;
+                        T.innerHTML += childhtml
                     }
                     if (typeof childhtml != 'string') {
                         if (childhtml.outerHTML != undefined) {
-                            // If childhtml is a DOM element with outerHTML, append its outerHTML
-                            T.innerHTML += childhtml.outerHTML;
+                            T.innerHTML += childhtml.outerHTML
                         }
                         if (childhtml.outerHTML == undefined) {
-                            // If childhtml is an object without outerHTML, append it directly
-                            T.innerHTML += childhtml;
+                            T.innerHTML += childhtml
                         }
                     }
                 }
             }
-    
-            // Insert the content based on the specified position
+
+
             if (position == 'before' || position == 'b') {
-                // Insert the content before the parent element's existing content
-                parentElement.innerHTML = T.innerHTML + parentElement.innerHTML;
+                parentElement.innerHTML = T.innerHTML + parentElement.innerHTML
             } else if (position == 'over' || position == 'o') {
-                // Replace the parent element's content entirely
-                if (T.innerHTML != null) parentElement.innerHTML = T.innerHTML;
-                if (T.innerHTML == null) parentElement.innerHTML = '';
+                if (T.innerHTML != null) parentElement.innerHTML = T.innerHTML
+                if (T.innerHTML == null) parentElement.innerHTML = ''
             } else if (position == 'replace' || position == 'r') {
-                // Replace the parent element itself with the new content
-                parentElement.outerHTML = T.innerHTML;
+                parentElement.outerHTML = T.innerHTML
             } else if (position == 'after' || position == 'a') {
-                // Insert the content after the parent element's existing content
-                parentElement.innerHTML = parentElement.innerHTML + T.innerHTML;
+                parentElement.innerHTML = parentElement.innerHTML + T.innerHTML
             } else if (position == 'parent' || position == 'p') {
-                // Wrap the parent element with the new content
-                var oldElement = parentElement.outerHTML;
-                parentElement.innerHTML = "";
-                T.childNodes[0].innerHTML += oldElement;
-                parentElement.outerHTML = T.innerHTML;
+                var oldElement = parentElement.outerHTML
+                parentElement.innerHTML = ""
+                T.childNodes[0].innerHTML += oldElement
+                parentElement.outerHTML = T.innerHTML
             } else {
-                // Default behavior: append the content after the parent element's existing content
-                parentElement.innerHTML = parentElement.innerHTML + T.innerHTML;
+                parentElement.innerHTML = parentElement.innerHTML + T.innerHTML
             }
-        } catch (err) {
-            // Log any errors that occur during execution
-            console.log(`append(${parentid}, ${childhtml}, ${position})`);
-            console.error(err);
         }
-    };
+        catch (err) {
+            console.log(`append(${parentid}, ${childhtml}, ${position})`)
+            console.error(err)
+        }
+
+    }
+
+        ;
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-        //gen start
-        self.gen = (elementtype, idin, htmlin, classin, src, event) => {
-            try {
-                if (htmlin != undefined) {
-                    // console.log(htmlin.isArray)
-                    if (Array.isArray(htmlin) != true) {
-                        var element = document.createElement(elementtype);
-                        if (idin != undefined && idin != "") {
-                            element.id = idin;
-                        }
-                        if (htmlin.nodeName === undefined) {
-                            // console.log(typeof (htmlin))
-                            if (typeof (htmlin) != "object") {
-                                // if (elementtype == 'code' || elementtype == 'pre') {
-                                if (elementtype == 'code') {
-                                    element.innerText = htmlin;
-                                } else if (elementtype == 'input') {
-                                    element.value = htmlin;
-                                } else if (elementtype == 'img') {
-                                    element.alt = htmlin;
-                                }
-                                else {
-                                    element.innerHTML = htmlin;
-                                }
-                            }
-                            if (typeof (htmlin) == "object") {
-                                element.innerHTML = htmlin;
-                                if (elementtype == 'input') element.value = htmlin;
-                                if (elementtype == 'img') element.alt = htmlin;
-                            }
-                        };
-                        if (htmlin.nodeName != undefined) {
-                            element.append(htmlin);
-                        };
-                        if (classin != undefined && classin != "") {
-                            // element.classList.add(classin);
-                            element.classList += classin.replaceAll(',', ' ').replaceAll(', ', ' ');
-                        }
-                    }
-                    //generate multiple element if array
-                    if (Array.isArray(htmlin) == true) {
-                        // console.log(htmlin)
-                        // var element = [];
-    
-                        var element = document.createElement("div")
-                        let arrayholder = document.createElement("div", "arrayholder", "")
-                        // console.log(htmlin.length)
-                        var checkfirstinput = htmlin[0]
-    
-                        for (var jj = 0; jj < htmlin.length; jj++) {
-    
-                            //if not object
-                            if (typeof checkfirstinput != 'object') {
-                                var elementarray = document.createElement(elementtype);
-                                if (idin != undefined && idin != "") {
-                                    elementarray.id = `${idin}-${jj}`;
-                                }
-    
-                                //Array of html elements
-                                if (htmlin[jj].nodeName === undefined) {
-                                    // console.log(typeof (htmlin))
-                                    if (typeof (htmlin) != "object") {
-                                        elementarray.innerHTML = htmlin[jj];
-                                        if (elementtype == 'input') elementarray.value = htmlin[jj];
-                                        if (elementtype == 'img') element.alt = htmlin[jj];
-                                    }
-                                    if (typeof (htmlin) == "object") {
-                                        elementarray.innerHTML = htmlin[jj];
-                                        if (elementtype == 'input') elementarray.value = htmlin[jj];
-                                        if (elementtype == 'img') element.alt = htmlin[jj];
-                                    }
-                                };
-                                //Array of strings non html
-                                if (htmlin[jj].nodeName != undefined) {
-                                    elementarray.append(htmlin[jj]);
-                                    // console.log(htmlin);
-                                    // console.log(htmlin.nodeName);
-                                };
-                                if (classin != undefined && classin != "") {
-                                    // element.classList.add(classin);
-                                    elementarray.classList += classin.replaceAll(',', ' ').replaceAll(', ', ' ');
-                                }
-                            }
-    
-                            // if object
-                            if (typeof checkfirstinput == 'object') {
-                                // elementarray = objtohtml(htmlin[jj])
-                                elementarray = jsonToElement(htmlin[jj])
-                                var elementtypeholder = document.createElement(elementtype)
-                                elementtypeholder.append(elementarray)
-                                elementarray = elementtypeholder
-                            }
-                            arrayholder.innerHTML += elementarray.outerHTML
-    
-                        }
-                        element = arrayholder.innerHTML
-                        // console.log(element)
-                    }
-    
-    
-                }
-    
-                if (htmlin == undefined) {
+    //gen
+    self.gen = (elementtype, idin, htmlin, classin, src, event) => {
+        try {
+            if (htmlin != undefined) {
+                // console.log(htmlin.isArray)
+                if (Array.isArray(htmlin) != true) {
                     var element = document.createElement(elementtype);
                     if (idin != undefined && idin != "") {
                         element.id = idin;
                     }
+                    if (htmlin.nodeName === undefined) {
+                        // console.log(typeof (htmlin))
+                        if (typeof (htmlin) != "object") {
+                            // if (elementtype == 'code' || elementtype == 'pre') {
+                            if (elementtype == 'code') {
+                                element.innerText = htmlin;
+                            } else if (elementtype == 'input') {
+                                element.value = htmlin;
+                            } else if (elementtype == 'img') {
+                                element.alt = htmlin;
+                            }
+                            else {
+                                element.innerHTML = htmlin;
+                            }
+                        }
+                        if (typeof (htmlin) == "object") {
+                            element.innerHTML = htmlin;
+                            if (elementtype == 'input') element.value = htmlin;
+                            if (elementtype == 'img') element.alt = htmlin;
+                        }
+                    };
+                    if (htmlin.nodeName != undefined) {
+                        element.append(htmlin);
+                    };
                     if (classin != undefined && classin != "") {
                         // element.classList.add(classin);
                         element.classList += classin.replaceAll(',', ' ').replaceAll(', ', ' ');
                     }
                 }
-                // var src = { "id": "testid" }
-                if (src != undefined) {
-                    if (src instanceof Object == true) {
-                        var objArray = Object.entries(src);
-                        objArray.forEach(A1 => {
-                            element.setAttribute(A1[0], A1[1])
-                        })
-    
+                //generate multiple element if array
+                if (Array.isArray(htmlin) == true) {
+                    // console.log(htmlin)
+                    // var element = [];
+
+                    var element = document.createElement("div")
+                    let arrayholder = document.createElement("div", "arrayholder", "")
+                    // console.log(htmlin.length)
+                    var checkfirstinput = htmlin[0]
+
+                    for (var jj = 0; jj < htmlin.length; jj++) {
+
+                        //if not object
+                        if (typeof checkfirstinput != 'object') {
+                            var elementarray = document.createElement(elementtype);
+                            if (idin != undefined && idin != "") {
+                                elementarray.id = `${idin}-${jj}`;
+                            }
+
+                            //Array of html elements
+                            if (htmlin[jj].nodeName === undefined) {
+                                // console.log(typeof (htmlin))
+                                if (typeof (htmlin) != "object") {
+                                    elementarray.innerHTML = htmlin[jj];
+                                    if (elementtype == 'input') elementarray.value = htmlin[jj];
+                                    if (elementtype == 'img') element.alt = htmlin[jj];
+                                }
+                                if (typeof (htmlin) == "object") {
+                                    elementarray.innerHTML = htmlin[jj];
+                                    if (elementtype == 'input') elementarray.value = htmlin[jj];
+                                    if (elementtype == 'img') element.alt = htmlin[jj];
+                                }
+                            };
+                            //Array of strings non html
+                            if (htmlin[jj].nodeName != undefined) {
+                                elementarray.append(htmlin[jj]);
+                                // console.log(htmlin);
+                                // console.log(htmlin.nodeName);
+                            };
+                            if (classin != undefined && classin != "") {
+                                // element.classList.add(classin);
+                                elementarray.classList += classin.replaceAll(',', ' ').replaceAll(', ', ' ');
+                            }
+                        }
+
+                        // if object
+                        if (typeof checkfirstinput == 'object') {
+                            // elementarray = objtohtml(htmlin[jj])
+                            elementarray = jsonToElement(htmlin[jj])
+                            var elementtypeholder = document.createElement(elementtype)
+                            elementtypeholder.append(elementarray)
+                            elementarray = elementtypeholder
+                        }
+                        arrayholder.innerHTML += elementarray.outerHTML
+
                     }
-                    else if (src instanceof Object == false) {
-                        if (elementtype == 'a') { element.href = src } else { element.src = src }
-                    }
+                    element = arrayholder.innerHTML
+                    // console.log(element)
                 }
-    
-    
-                return element;
-    
+
+
             }
-            catch (err) {
-                console.error("Error during gen(", elementtype, idin, htmlin, classin, src, ")", err
-                )
+
+            if (htmlin == undefined) {
+                var element = document.createElement(elementtype);
+                if (idin != undefined && idin != "") {
+                    element.id = idin;
+                }
+                if (classin != undefined && classin != "") {
+                    // element.classList.add(classin);
+                    element.classList += classin.replaceAll(',', ' ').replaceAll(', ', ' ');
+                }
             }
-        };
-        //gen end
+            // var src = { "id": "testid" }
+            if (src != undefined) {
+                if (src instanceof Object == true) {
+                    var objArray = Object.entries(src);
+                    objArray.forEach(A1 => {
+                        element.setAttribute(A1[0], A1[1])
+                    })
+
+                }
+                else if (src instanceof Object == false) {
+                    if (elementtype == 'a') { element.href = src } else { element.src = src }
+                }
+            }
+
+
+            return element;
+
+        }
+        catch (err) {
+            console.error("Error during gen(", elementtype, idin, htmlin, classin, src, ")", err
+            )
+        }
+    }
+
+        ;
 
 
     self.gens = (...args) => {
@@ -456,7 +313,6 @@ function GeneratorJs() {
                 keylist.forEach((key) => {
                     eval(`elem.${key}=obj.${key}`)
                 })
-                return elem
             }
             if (Array.isArray(obj) == true) {
                 var placeholder = document.createElement(div)
@@ -479,36 +335,25 @@ function GeneratorJs() {
                 elem = placeholder
                 // console.log(elem.outerHTML)
 
-                return elem.innerHTML
             }
 
+            return elem
         }
         catch { console.error("jsonToElement(", obj, ")") }
     }
 
         ;
 
-    //cssvar read and modify css vars
-    self.cssvar = (name, value, element = document.querySelector(':root')) => {
-        // Get the computed styles of the specified element
-        var rootStyle = getComputedStyle(element);
-    
-        // Ensure the CSS variable name starts with '--'
-        if (name[0] != '-') {
-            name = `--${name}`;
-        }
-    
-        // If a value is provided, set the CSS variable on the specified element
-        if (value) {
-            element.style.setProperty(name, value);
-        }
-    
-        // Return the current value of the CSS variable
-        return rootStyle.getPropertyValue(name);
-    };
 
+    self.cssvar = (name, value) => {
+        var r = document.querySelector(':root')
+        var rs = getComputedStyle(r)
+        if (name[0] != '-') name = '--' + name
+        if (value) r.style.setProperty(name, value)
+        return rs.getPropertyValue(name);
+    }
 
-    //getremotefile and use data
+        ;
     self.getfile = (URL, callback) => {
 
         var name = URL
@@ -863,13 +708,13 @@ function GeneratorJs() {
 
 
             function idToCssSelectorChain(id, mediaQuery) {
-
+                
                 cssSelectorChain = ""
                 for (let i_id = mediaQuery; i_id < id.length; i_id++) {
                     var currentId = id[i_id];
                     // log(currentId)
                     if (currentId.includes(",")) {
-
+                    
                         currentId = currentId.replaceAll(" ,", ',').replaceAll(", ", ',')
                         var idParts = currentId.split(",")
                         var expandedChain = ""
@@ -880,18 +725,18 @@ function GeneratorJs() {
 
                         cssSelectorChain = expandedChain.substring(0, expandedChain.length - 2)
                     }
-                    else {
+                    else { 
 
                         // if (cssSelectorChain.includes("pdf")){
-                        var newChain = ""
-                        cssSelectorChain.split(",").forEach(part => {
-                            if (newChain != "") { newChain += ", " }
-                            newChain += part + " " + id[i_id]
-                        })
-                        cssSelectorChain = newChain
+                            var newChain=""
+                            cssSelectorChain.split(",").forEach(part =>{
+                                if (newChain!="")   {                                    newChain+=", "                                    }
+                                newChain += part+ " " + id[i_id]
+                            })
+                            cssSelectorChain=newChain
                         // }
                         // else{
-
+                            
                         // cssSelectorChain = cssSelectorChain + " " + id[i_id] 
                         // }
                     }
@@ -923,14 +768,13 @@ function GeneratorJs() {
             var applog = document.getElementById("applog")
             if (applog == null || applog == undefined) {
                 // document.getElementById("app").append(gen(div, "applog", "", "applog,applog"))
-                self.append("body", self.gen("div", "applog", self.gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "GeneratorJs().hide(this.parentElement)" }), "applog,dragable"))
+                self.append("body", self.gen("div", "applog", self.gen(span, "", "close", "cross material-symbols-outlined", { "onclick": "GeneratorJs().hide(this.parentElement)" }), "applog"))
 
                 // append(app, gen("div", "applog", "", "applog", { "onclick": "hide(this)" }))
                 self.loadscss(self.logStyleScss, "log")
-                dragElement(grab(".dragable")[0])
+
             }
-            // if (data === 'clear' || data === 'hide' || data === null || data === undefined || data === "") {
-                if (data === 'clear' || data === 'hide') {
+            if (data === 'clear' || data === 'hide' || data === null || data === undefined || data === "") {
                 var applog = document.getElementById("applog")
                 console.clear()
                 applog.innerHTML = "";
@@ -970,48 +814,6 @@ function GeneratorJs() {
             console.log(`log(${data}, ${pos})`)
             console.error(err)
         }
-
-        
-        function dragElement(elmnt) {
-            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            if (document.getElementById(elmnt.id + "header")) {
-              // if present, the header is where you move the DIV from:
-              document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-            } else {
-              // otherwise, move the DIV from anywhere inside the DIV:
-              elmnt.onmousedown = dragMouseDown;
-            }
-          
-            function dragMouseDown(e) {
-              e = e || window.event;
-              e.preventDefault();
-              // get the mouse cursor position at startup:
-              pos3 = e.clientX;
-              pos4 = e.clientY;
-              document.onmouseup = closeDragElement;
-              // call a function whenever the cursor moves:
-              document.onmousemove = elementDrag;
-            }
-          
-            function elementDrag(e) {
-              e = e || window.event;
-              e.preventDefault();
-              // calculate the new cursor position:
-              pos1 = pos3 - e.clientX;
-              pos2 = pos4 - e.clientY;
-              pos3 = e.clientX;
-              pos4 = e.clientY;
-              // set the element's new position:
-              elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-              elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-            }
-          
-            function closeDragElement() {
-              // stop moving when mouse button is released:
-              document.onmouseup = null;
-              document.onmousemove = null;
-            }
-          }
     };
 
 
@@ -1086,7 +888,7 @@ function GeneratorJs() {
                 //https://regex101.com/r/6JJNlx/1
                 // var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi
                 // var inlinecodePattern = /(^|[^`])`([^`]*?)`(?!`)/gmi;
-                var inlinecodePattern = /(?<!`)`([^`]*?)`(?!`)/gmi;
+                var inlinecodePattern=/(?<!`)`([^`]*?)`(?!`)/gmi;
                 match1 = md.matchAll(inlinecodePattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -1255,7 +1057,7 @@ function GeneratorJs() {
                 // https://regex101.com/r/APBkU8/1
                 // var linkPattern = /[^!]\[([^\]]*)\]\(([^\)]*)\)/gmi
                 var linkPattern = /(?<!!)\[([^\]]*)\]\(([^\)]*)\)/gmi
-
+                
                 match1 = md.matchAll(linkPattern)
                 matchList = Array.from(match1)
                 matchList.forEach(p => {
@@ -1265,7 +1067,7 @@ function GeneratorJs() {
                 })
 
 
-
+ 
 
 
 
@@ -1308,17 +1110,17 @@ function GeneratorJs() {
 
 
 
-                // reference
-                https://regex101.com/r/eLzXSC/1                                 
-                var referencelinkPattern = /(?<!!)\[([^\]]*)\]\s{0,3}\[([^\]]*)\]/gmi
+               // reference
+               https://regex101.com/r/eLzXSC/1                                 
+               var referencelinkPattern = /(?<!!)\[([^\]]*)\]\s{0,3}\[([^\]]*)\]/gmi
+               
+               match1 = md.matchAll(referencelinkPattern)
+               matchList = Array.from(match1)
+               matchList.forEach(p => {
+                   //                    log(p)
+                   md = md.replaceAll(p[0], `<a href="#${p[2]}">${p[1]}</a>`)
 
-                match1 = md.matchAll(referencelinkPattern)
-                matchList = Array.from(match1)
-                matchList.forEach(p => {
-                    //                    log(p)
-                    md = md.replaceAll(p[0], `<a href="#${p[2]}">${p[1]}</a>`)
-
-                })
+               })
 
 
 
@@ -1347,7 +1149,7 @@ function GeneratorJs() {
                     list = block.matchAll(sublistPattern)
                     listEntry = Array.from(list)
                     listEntry.forEach(li => {
-                        //                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`) trying sub list
+//                        block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[1]}</li></ul>`) trying sub list
                         block = block.replaceAll(li[0], `\n<ul>\n\t<li>${li[2]}</li></ul>`)
                     })
 

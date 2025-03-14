@@ -1,3 +1,4 @@
+//slidegen
 window.DEBUG= true;
 window.$ = GeneratorJs();
 window.$$ = GeneratorWebHelper();
@@ -290,6 +291,17 @@ table {
         padding-block: 1em;
         width: 100%;
 
+        .sideBarSearchInput{
+          position: relative;
+          max-width:100%;
+          padding:.2em;
+          margin-top: .5em;
+          border:2px solid var(--textColor);
+          border-radius:.5em;
+         }
+
+
+
         #slidenavlist {
             position: relative;
             height: calc(90vh - 2em);
@@ -300,11 +312,11 @@ table {
             font-size: 0.8em;
 
             li {
-                margin-block: 1em;
+                margin-block: .5em;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-
+                padding-inline:.5em;
                 cursor: hand;
 
                 a {
@@ -315,6 +327,7 @@ table {
                     box-shadow: 0.1em 0.1em 5px hsla(0, 0%, 0%, 0.2);
 
                     display: flex;
+                    flex-direction:column;
                     justify-content: center;
                     align-items: center;
                     width: 100%;
@@ -322,11 +335,17 @@ table {
                     height: 100%;
                     min-height: 2em;
                     text-decoration: none;
-                    font-weight: bold;
 
                     &:hover,
                     .active {
                         outline: 2px solid aqua;
+                    }
+
+                    p{
+                    font-weight: normal;
+                    font-size:.8em;
+                    padding-inline:.5;
+                    
                     }
                 }
 
@@ -642,6 +661,9 @@ function toggleFullscreen() {
 }
 
 document.addEventListener("dblclick", (e) => {
+  if (document.activeElement.tagName.toLowerCase() === "input") {
+    return; // Do nothing if the user is typing in a search input
+  }
   e.preventDefault();
   toggleFullscreen();
 });
@@ -676,6 +698,11 @@ function scrollAction(direction = "down", scrollState) {
 
 // Keyboard Control
 function keyPressHandler(e) {
+
+  if (document.activeElement.tagName.toLowerCase() === "input") {
+    return; // Do nothing if the user is typing in a search input
+  }
+
   // e.preventDefault()
   if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) {
   } else {
@@ -913,18 +940,21 @@ function footerButtons() {
     `#footerButtons`,
     gen(span, "reload", "Reload", "button,reloadPage", {
       onclick: "reloadPage()",
+      title:"Reload Page",
     })
   );
   append(
     `#footerButtons`,
     gen(span, "print", "Print Slides", "button,printSlides", {
       onclick: "printSlides()",
+      title:"Suitable for converting in to PDF, try print with no margin and background color",
     })
   );
   append(
     `#footerButtons`,
     gen(span, "print", "Print Notes", "button,printSlides", {
       onclick: "printNotes()",
+      title:"Suitable for actual printing notes in fewer pages",
     })
   );
   append(
@@ -939,7 +969,8 @@ function footerButtons() {
   // append(`#footerButtons`, gen(input, "open", "Open", "button,openFile", { "type": "file", "onchange": "openFile()" }))
   append(
     `#footerButtons`,
-    gen(label, "openbtn", "Open", "button,openFile", { for: "open" })
+    gen(label, "openbtn", "Open", "button,openFile", { for: "open",
+      title:"Open local markdown(.md) or interactive python notebook(.ipynb)", })
   );
 }
 
@@ -1346,7 +1377,8 @@ function parseCsv(link, callback) {
 
     var listrootscss=`
     .listroot{
-      display:block;
+      display:flex;
+      flex-direction:column;
       min-height:40vh;
       padding-block: 2em;
       padding-inline:clamp(5em,5vw,1em);
@@ -1362,10 +1394,19 @@ function parseCsv(link, callback) {
       }
 
       .search{
-        padding:.5em;
-        border-radius:.2em;
+        display: block;
+        margin: 0 auto;
+        background-color: hsl(var(--hue,5%,5%));
+        color:white;
+        width: 90%;
+        border-radius: .5em;
+        border: 1px solid white;
+        padding: .5em 1em;
         outline:none;
-        border:none;
+      }
+
+      tr:has(td:empty){
+        display: none;
       }
     }
     
@@ -1395,21 +1436,36 @@ function parseCsv(link, callback) {
 
     append(`#listroot`,gen(table,"tablemain","","listbody"))
 
-    append(`#tablemain`,gen("thead","tablehead",""))
-    append(`#tablemain`,gen("tbody","tablebody",""))
+    append(tablemain,gen("thead","tablehead",""))
+    append(tablemain,gen("tbody","tablebody",""))
     console.log(csv)
-    csv.split("\n").forEach(row=>{
-      console.log(row)
-      append(`#tablebody`,gen("tr","",row))
-    })
+
+    var csvRows=csv.split("\n")
+    for (var i = 0; i<csvRows.length; i++){
+      var rowData=csvRows[i]
+      // console.log(rowData)
+      if (i==0) 
+        {append(`#tablehead`,gen("tr",`tablerow${i}`))} 
+      else
+         {append(`#tablebody`,gen("tr",`tablerow${i}`))}
+      var colData = rowData.split(",")
+      for (var j = 0; j<colData.length; j++){
+        append(`#tablerow${i}`,gen(td,`tablecol${i}${j}`,colData[j]))
+      }
+    }
 
 
 
 
     
  
-    
-
+    //navigator Search 
+    var searchElement=grab("#sideBarSearchInput")[0]
+    searchElement.addEventListener('focus', (e)=> {
+      // document.removeEventListener("keydown",keyPressHandler)
+      e.stopPropagation()
+      
+    })
 
 
 
@@ -1461,7 +1517,26 @@ function parseCsv(link, callback) {
 
 
 
+// hide sidebar links on search
+function handleSidebarSearch(){
+  var allSlides=grab(".slide")
+  var allSlidesNav=grab(".slideNavLink")
+  var searchTerm=grab("#sideBarSearchInput")[0].value
+  console.log(searchTerm)
 
+
+  for(var i=0;i<allSlides.length;i++){
+    allSlidesNav[i].parentElement.classList.add("hide")
+    var s=allSlides[i]
+    if (s.innerText.includes(searchTerm)){
+      allSlidesNav[i].parentElement.classList.remove("hide")
+    }
+  }
+
+  loadscss(`.hide{
+    display: none !important;;
+  }`,"hide")
+}
 
 
 
@@ -1487,6 +1562,9 @@ function parseSlide(link, callback) {
     append(`main`, gen(div, "slideroot", "", "slideroot"));
     append(slideroot, gen("aside", "sideBar", ""));
     append(sideBar, gen(div, "slidenav", gen(h3, "", "Navigator")));
+
+    //add searchbar
+    append(slidenav,gen(input,"sideBarSearchInput","","sideBarSearchInput",  {oninput:"handleSidebarSearch()"}))
     append(slidenav, gen(ul, "slidenavlist", "", "slidenavlist"));
 
     var html = md.split(/^---\s*?$/gm);
@@ -1518,6 +1596,10 @@ function parseSlide(link, callback) {
           );
         });
       }
+      //update sidebar with slide headings
+      var slideHeading=grab(".slide")[i].querySelectorAll("h1,h2,h3,h4,h5,h6,p")[0].innerText
+      grab(".slideNavLink")[i].innerHTML+=`: ${gens(p,"",slideHeading,"sideNavLinkSummary")}`
+
     }
     append(
       slidenavlist,
@@ -1537,6 +1619,13 @@ function parseSlide(link, callback) {
       callback();
     }
   });
+  
+  setTimeout(() => {
+    PageNavSelf.updatePageNavUl()
+  },3000)
+
+
+
 }
 
 function parseNotebook(link, callback) {
@@ -1688,7 +1777,7 @@ function parseNotebook(link, callback) {
         }
       }
     });
-
+    // fill sidenav with data
     var noOfBlocks = grab(".block").length;
     for (var i = 0; i < noOfBlocks; i++) {
       append(
@@ -1749,6 +1838,13 @@ function parseNotebook(link, callback) {
   convertLocalLinks();
   updateFiledropEventListeners();
   mathjaxHljsCopyIcon();
+
+  setTimeout(() => {
+    PageNavSelf.updatePageNavUl()
+  },3000)
+
+
+    
 }
 
 function closeparent(e) {
