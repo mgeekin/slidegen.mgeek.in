@@ -798,9 +798,12 @@ const convertLocalLinks = () => {
     );
   }, 2000);
 
+
+setTimeout(()=>{
   try{ 
       document.title = grab("h1,h2,h3,h4,h5,h6,p")[0].innerHTML;
   }  catch (e) { }
+},1000)
 };
 
 function loadBasicSkeleton(title = "Home") {
