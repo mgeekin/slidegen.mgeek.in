@@ -1,7 +1,6 @@
 ./
-./.dist
-./.git
 ./.github
+./.git
 ./.libs
-./Demo
-./README.md
+./2 Folder Structure Demo
+./1 What is Slidegen and how to use.md
