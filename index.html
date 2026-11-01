@@ -1,54 +1,283 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  
-  <script src="./.libs/sevn.min.js"></script>
-  <script src="./.libs/WebHelper.js"></script>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dr. Prateek Raj Gautam Designed using SlideGen by mGeek.in</title>
-
-  <!-- MathJax -->
-  <script>
-    MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-        processEscapes: false,
-      },
-      svg: {
-        fontCache: 'global'
-      }
-    };
-    </script>
-    <script type="text/javascript" id="MathJax-script" async
-      <!-- src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js"> -->
-      src = "./.libs/tex-mml-chtml.js" >
-    </script>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>slidegen — files, folders and slides in the browser</title>
+<style>
+:root{
+  --bg:#faf8ff; --surface:#ffffff; --text:#1d1530; --muted:#5d5675; --border:#e4ddf3;
+  --accent:hsl(276,60%,45%); --accent2:hsl(234,70%,55%); --code:#f1ecfb; --on-accent:#fff;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#120a1f; --surface:#1b1230; --text:#efeaff; --muted:#a89fc4; --border:#33254f;
+    --accent:hsl(276,80%,74%); --accent2:hsl(234,90%,76%); --code:#0d0717; --on-accent:#120a1f; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#120a1f; --surface:#1b1230; --text:#efeaff; --muted:#a89fc4; --border:#33254f;
+  --accent:hsl(276,80%,74%); --accent2:hsl(234,90%,76%); --code:#0d0717; --on-accent:#120a1f; color-scheme:dark;
+}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 4.5rem)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:10}
+a{color:var(--accent)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;background:var(--surface);border-bottom:1px solid var(--border)}
+nav{max-width:68rem;margin:0 auto;padding:.7rem 1.2rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+nav b{font-size:1.1rem;margin-right:auto}
+nav a{text-decoration:none;color:var(--muted);font-size:.95rem}
+nav a:hover{color:var(--accent)}
+main{max-width:68rem;margin:0 auto;padding:0 1.2rem}
+section{padding:4rem 0 1rem}
+h1{font-size:clamp(2.2rem,6vw,3.8rem);line-height:1.1;margin:.2em 0}
+h2{font-size:1.9rem;margin:0 0 .3em}
+h3{margin:0 0 .4em;font-size:1.1rem}
+.lead{color:var(--muted);font-size:1.15rem;max-width:42rem}
+.grad{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:2.5rem;align-items:center;padding-top:3.5rem}
+@media (max-width:760px){.hero{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.2rem 0}
+.chip{border:1px solid var(--border);background:var(--surface);border-radius:2rem;padding:.2rem .8rem;font-size:.85rem;color:var(--muted)}
+.btn{display:inline-block;padding:.65rem 1.2rem;border-radius:.6rem;background:var(--accent);color:var(--on-accent);text-decoration:none;font-weight:600;margin-right:.5rem}
+.btn.alt{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.mock{border:1px solid var(--border);border-radius:.8rem;background:var(--surface);overflow:hidden;box-shadow:0 12px 40px rgba(90,40,160,.18)}
+.mock .bar{display:flex;gap:.35rem;padding:.55rem .8rem;border-bottom:1px solid var(--border)}
+.mock .bar i{width:.65rem;height:.65rem;border-radius:50%;background:var(--border)}
+.mock .body{display:grid;grid-template-columns:7.5rem 1fr;min-height:15rem}
+.mock .side{border-right:1px solid var(--border);padding:.7rem;font-size:.75rem;color:var(--muted)}
+.mock .side div{padding:.25rem .4rem;border-radius:.3rem}
+.mock .side .on{background:var(--code);color:var(--accent)}
+.mock .slide{padding:1.4rem}
+.mock .slide h4{margin:0 0 .6rem;font-size:1.25rem}
+.mock .slide span{display:block;height:.55rem;border-radius:.3rem;background:var(--code);margin:.5rem 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem;margin-top:1.5rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:.8rem;padding:1.1rem 1.2rem}
+.card p{margin:.2rem 0;color:var(--muted);font-size:.95rem}
+pre{background:var(--code);border:1px solid var(--border);border-radius:.6rem;padding:.9rem 1rem;overflow-x:auto;font:.85rem/1.55 var(--mono);margin:.6rem 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code);padding:.1em .35em;border-radius:.3em}
+pre code{background:none;padding:0}
+.steps{display:grid;gap:1.2rem;margin-top:1.5rem}
+.step h3 span{color:var(--accent)}
+.tablewrap{overflow-x:auto;margin-top:1.2rem}
+table{border-collapse:collapse;width:100%;min-width:30rem;background:var(--surface);border:1px solid var(--border)}
+th,td{text-align:left;padding:.55rem .9rem;border-bottom:1px solid var(--border);font-size:.95rem}
+th{color:var(--muted);font-weight:600;background:var(--code)}
+kbd{font:600 .8rem var(--mono);background:var(--code);border:1px solid var(--border);border-bottom-width:2px;border-radius:.35rem;padding:.1rem .45rem;margin-right:.15rem;white-space:nowrap}
+.note{color:var(--muted);font-size:.9rem;margin-top:.8rem}
+.badge{font-size:.7rem;border-radius:1rem;padding:.05rem .5rem;border:1px solid var(--accent);color:var(--accent);margin-left:.4rem;vertical-align:middle}
+#q{width:100%;max-width:26rem;padding:.6rem .9rem;border-radius:.6rem;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;margin-top:1rem}
+.fn{list-style:none;margin:.4rem 0 0;padding:0}
+.fn li{padding:.35rem 0;border-top:1px dashed var(--border);font-size:.92rem;color:var(--muted)}
+.fn li:first-child{border-top:0}
+.fn code{color:var(--text);font-weight:600}
+.hidden{display:none}
+footer{max-width:68rem;margin:3rem auto 0;padding:2rem 1.2rem 3rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--border)}
+</style>
 </head>
+<body>
+<header><nav>
+  <b class="grad">slidegen</b>
+  <a href="#hero">Overview</a><a href="#how">How to use</a><a href="#keys">Keyboard</a><a href="#functions">Functions</a>
+</nav></header>
 
-<body style="background-color:#222;color:#ccc;font-size:.8rem;">
-  <div id="app" class="app">
+<main>
+<section id="hero" class="hero">
+  <div>
+    <h1>Browse folders.<br><span class="grad">Present anything.</span></h1>
+    <p class="lead">slidegen turns a plain web folder into a browsable site: files and folders on the left, Markdown and Jupyter notebooks rendered as slides, CSV files as searchable tables, and everything printable as slides or notes.</p>
+    <div class="chips"><span class="chip">Markdown → slides</span><span class="chip">.ipynb notebooks</span><span class="chip">CSV search</span><span class="chip">PDF viewer</span><span class="chip">Print slides &amp; notes</span><span class="chip">Open local files</span></div>
+    <a class="btn" href="#how">How to use</a><a class="btn alt" href="#keys">Shortcuts</a><a class="btn alt" href="./demo">Preview</a>
   </div>
-  <!-- <script src="https://sevnjs.github.io/cdn/latest/sevn.min.js"></script> -->
-  <!-- <script src="https://sevnjs.github.io/WebHelper/WebHelper.js"></script> -->
-  
-  
+  <div class="mock" aria-hidden="true">
+    <div class="bar"><i></i><i></i><i></i></div>
+    <div class="body">
+      <div class="side"><b>Navigator</b><div class="on">Slide 1: Intro</div><div>Slide 2: Docker</div><div>Slide 3: Compose</div><div>Source</div></div>
+      <div class="slide"><h4>Containers 101</h4><span style="width:90%"></span><span style="width:70%"></span><span style="width:80%"></span><span style="width:40%"></span></div>
+    </div>
+  </div>
+</section>
 
-  <!-- <script src="./.libs/slidegen.js" defer></script> -->
-  <!-- <script src="/slidegen.min.js" defer></script> -->
+<section id="how">
+  <h2>How to use</h2>
+  <p class="lead">Serve a folder, list its contents, write Markdown with <code>---</code> between slides, open it. Commands below are examples you can adapt.</p>
+  <div class="steps">
+    <div class="card step">
+      <h3><span>1.</span> Serve a folder and list it</h3>
+      <p>Each directory has a <code>list.txt</code>: one path per line, directories end with <code>/</code>. Hidden entries (starting with <code>.</code>) are skipped.</p>
+<pre><code># serve the course folder over HTTP (any static server works)
+cd ~/course
+python3 -m http.server 8000
 
-  
+# one way to generate list.txt in every folder (dirs get a trailing /)
+for d in . */; do (cd "$d" &amp;&amp; ls -1p &gt; list.txt); done</code></pre>
+    </div>
+    <div class="card step">
+      <h3><span>2.</span> Write slides in Markdown</h3>
+      <p>A line containing only <code>---</code> starts a new slide. The first heading becomes the slide’s entry in the navigator. Math and code blocks are rendered and highlighted.</p>
+<pre><code># Containers 101
+What a container is, in one slide.
 
-  <!-- highlighter -->
-  <script>
-    <!-- load(["https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"]) -->
-    load(["./.libs/highlight.js/default.min.css", "./.libs/highlight.js/highlight.min.js"])
-    setTimeout(hljs.highlightAll(), 2000)
-  </script>
+---
+
+## Why Docker?
+- Same environment everywhere
+- Fast to start
+
+---
+
+## Run it
+```bash
+# start a container and remove it on exit
+docker run --rm -it alpine sh
+```</code></pre>
+    </div>
+    <div class="card step">
+      <h3><span>3.</span> Navigate with the URL</h3>
+      <p>The location is stored in the hash, so every view is linkable and the browser Back button works.</p>
+<pre><code># folder + file in the hash
+http://localhost:8000/#d=/week1/&amp;f=intro.md
+
+# folder only: shows the directory listing
+http://localhost:8000/#d=/week1/</code></pre>
+    </div>
+    <div class="card step">
+      <h3><span>4.</span> Open, present, print</h3>
+<pre><code># Open a local file (no server needed): footer "Open" button, Ctrl+O, or drag a file onto the page
+#   supports .md  .markdown  .ipynb  .csv   (several files at once are opened in order)
+
+# Present: press F for fullscreen, arrows / PageUp / PageDown to move
+# Print:   "Print Slides" = one slide per page (save as PDF, no margins)
+#          "Print Notes"  = compact pages for paper</code></pre>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card"><h3>Slides</h3><p>Markdown decks with a searchable navigator, slide counters and a Source link.</p></div>
+    <div class="card"><h3>Notebooks</h3><p>Markdown cells, code inputs and outputs (text, streams, images) as blocks.</p></div>
+    <div class="card"><h3>CSV tables</h3><p>Header row plus a search box that filters rows as you type.</p></div>
+    <div class="card"><h3>PDF &amp; downloads</h3><p>PDFs open in a dialog; docx, xlsx, pptx, odt, ods and odp download directly.</p></div>
+  </div>
+</section>
+
+<section id="keys">
+  <h2>Keyboard shortcuts</h2>
+  <p class="lead">Shortcuts are ignored while you type in a search box.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td><kbd>→</kbd><kbd>↓</kbd><kbd>PageDown</kbd></td><td>Next slide</td></tr>
+      <tr><td><kbd>←</kbd><kbd>↑</kbd><kbd>PageUp</kbd></td><td>Previous slide</td></tr>
+      <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>First / last slide</td></tr>
+      <tr><td><kbd>F</kbd> or double-click</td><td>Toggle fullscreen</td></tr>
+      <tr><td><kbd>O</kbd></td><td>Open local file(s)</td></tr>
+      <tr><td><kbd>Ctrl</kbd><kbd>O</kbd></td><td>Open the file dialog</td></tr>
+      <tr><td><kbd>R</kbd></td><td>Reload the current view</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>Activate the focused item (folder, file, button)</td></tr>
+      <tr><td><kbd>Backspace</kbd></td><td>Go up one folder</td></tr>
+      <tr><td><kbd>C</kbd><span class="badge">in development</span></td><td>Clone view in a second window (presenter notes planned)</td></tr>
+      <tr><td><kbd>H</kbd><span class="badge">in development</span></td><td>Show shortcut hints (not implemented yet)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="functions">
+  <h2>Functions</h2>
+  <p class="lead">Every file type has a <b>loader</b> (gets the content and prepares the page) and a <b>processor</b> (turns content into DOM inside any target). Processors only clear the target in <code>over</code> mode, so they can be reused to add content anywhere.</p>
+<pre><code>// processors: content in, DOM out. target defaults to "#main", mode to MODE.over
+const view = processMarkdown(mdText, { target: "#notes", mode: MODE.after });
+// view = { root, nav, slides }
+
+// loaders: URL or File in, calls the processor. Same options.
+await loadMarkdown("/week1/intro.md", { callback: (v) =&gt; console.log(v.slides.length) });
+await openSource(fileFromInput);   // picks the loader from the handlers registry</code></pre>
+  <input id="q" type="search" placeholder="Filter functions (try “load” or “router”)" aria-label="Filter functions">
+  <div class="grid" id="fgrid"></div>
+  <p class="note">External helpers used by slidegen (not defined in it): <code>gen</code>, <code>gens</code>, <code>append</code>, <code>grab</code>, <code>getfile</code>, <code>load</code>, <code>loadscss</code>, <code>parsemd</code>, <code>WebHelper</code>.</p>
+</section>
+</main>
+
+<footer>slidegen v1.2.4 · Markdown, notebooks and CSV as a browsable, printable site.</footer>
+
+<script>
+(function(){
+  var groups = [
+    ["Loaders", "fetch or read a source, prepare the page, call a processor", [
+      ["loadMarkdown(src, opts)", "Markdown file → slide deck"],
+      ["loadIpynb(src, opts)", "Jupyter notebook → blocks"],
+      ["loadCsv(src, opts)", "CSV → searchable table"],
+      ["loadList(src, opts)", "list.txt → folder and file grid"],
+      ["loadPdf(src, opts)", "PDF in a modal dialog"]
+    ]],
+    ["Processors", "content → DOM, no fetching, no router", [
+      ["processMarkdown(md, opts)", "splits on --- and builds the deck and navigator"],
+      ["processIpynb(nb, opts)", "cells, outputs and navigator"],
+      ["processCsv(text, opts)", "table with search box"],
+      ["processList(text, opts)", "directory grid"],
+      ["splitSlides / renderSlide / buildNavigator", "building blocks of a deck"],
+      ["renderNotebookOutput(div, output)", "one notebook output"]
+    ]],
+    ["Sources and registry", "one place decides what opens how", [
+      ["handlers", "extension → loader, MIME type, listing style"],
+      ["openSource(src, name, opts)", "open a URL or File with the right loader"],
+      ["openFiles(files, opts)", "open several files in order"],
+      ["openFile()", "footer Open button and O key"],
+      ["readSource / getText", "URL or File → text"],
+      ["placeInTarget(target, el, mode)", "the only place that clears a target"],
+      ["MODE", "over (replace) and after (append)"],
+      ["mdToHtml(md, cb)", "wrapper around the external parsemd"]
+    ]],
+    ["Routing and views", "URL hash is the state", [
+      ["Router", "reads and writes #d=…&amp;f=…"],
+      ["generateView()", "render whatever the router points at"],
+      ["reloadPage()", "rebuild view, breadcrumb and footer"],
+      ["updateOnHashChange()", "reacts to hash changes"],
+      ["changepath / appendDir / appendfile", "breadcrumb, folder and file navigation"],
+      ["paginationUpdate() / appendBackButton()", "breadcrumb and Back button"],
+      ["dict2hash / hash2dict", "hash string ⇄ object"]
+    ]],
+    ["Interface and input", "keys, files, print, search", [
+      ["keyPressHandler(e)", "all keyboard shortcuts"],
+      ["scrollAction(direction)", "move by screen, home, end"],
+      ["toggleFullscreen()", "fullscreen on #main"],
+      ["updateFiledropEventListeners()", "drag and drop of local files"],
+      ["footerButtons()", "Reload, Print Slides, Print Notes, Open"],
+      ["printSlides() / printNotes()", "print stylesheets"],
+      ["handleSidebarSearch / filtertable", "navigator and CSV search"],
+      ["mathjaxHljsCopyIcon()", "math, highlighting, copy icons"],
+      ["imageFullscreenToggle()", "click an image or SVG to zoom"],
+      ["cloneView() / toggleHints()", "clone window and hints (in development)"]
+    ]],
+    ["Fallback names", "the old API still works", [
+      ["parseSlide(url, cb)", "→ loadMarkdown"],
+      ["appendSlide(target, link, type, cb)", "→ loadMarkdown with target and mode"],
+      ["parseNotebook", "→ loadIpynb"],
+      ["parseCsv", "→ loadCsv"],
+      ["parsePdf", "→ loadPdf"],
+      ["parselist", "→ loadList"]
+    ]]
+  ];
+  var grid = document.getElementById("fgrid"), q = document.getElementById("q");
+  groups.forEach(function(g){
+    var c = document.createElement("div"); c.className = "card";
+    var h = "<h3>" + g[0] + "</h3><p>" + g[1] + "</p><ul class=\"fn\">";
+    g[2].forEach(function(f){ h += "<li><code>" + f[0] + "</code> — " + f[1] + "</li>"; });
+    c.innerHTML = h + "</ul>"; grid.appendChild(c);
+  });
+  q.addEventListener("input", function(){
+    var t = q.value.toLowerCase();
+    grid.querySelectorAll(".card").forEach(function(c){
+      var any = false;
+      c.querySelectorAll("li").forEach(function(li){
+        var m = !t || li.textContent.toLowerCase().indexOf(t) > -1;
+        li.classList.toggle("hidden", !m); if (m) any = true;
+      });
+      c.classList.toggle("hidden", !any);
+    });
+  });
+})();
+</script>
 </body>
-
 </html>

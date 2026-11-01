@@ -830,7 +830,7 @@ setSlidegenTitle();
 };
 
 function loadBasicSkeleton(title = "Home") {
-  load("/style.scss");
+  load("./style.scss");
   //your app logic
   append(app, "", "over"); /* reset app */
   append(app, gen(header, "header", "", "header"));
@@ -2178,10 +2178,7 @@ var hidenodescss=`
 }
 `
 setTimeout(loadscss(hidenodescss),2000)
-
-var printSlideStyle=`
-
-@media print {
+var printSlideStyle=`@media print {
     @page {
         size: A4 landscape;
     }
